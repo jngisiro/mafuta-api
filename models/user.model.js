@@ -3,6 +3,8 @@ const validator = require("validator");
 const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
 
+const Transaction = require("./transaction.model");
+
 const userSchema = new mongoose.Schema({
   firstname: { type: String, required: [true, "Please provide a first name"] },
   lastname: { type: String, required: [true, "Please provide a last name"] },
@@ -13,6 +15,7 @@ const userSchema = new mongoose.Schema({
     lowercase: true,
     validate: [validator.isEmail, "Please provide a valid email"]
   },
+  transactions: Array,
   photo: String,
   role: {
     type: String,
@@ -41,7 +44,10 @@ const userSchema = new mongoose.Schema({
     default: true,
     select: false
   },
-  passwordChangedAt: Date, // Created only when a user changes password
+  passwordChangedAt: {
+    type: Date,
+    select: false
+  }, // Created only when a user changes password
   passwordResetToken: String,
   passwordResetExpires: Date
 });
@@ -72,6 +78,25 @@ userSchema.pre(/^find/, function(next) {
   this.find({ active: { $ne: false } });
   next();
 });
+
+userSchema.pre(/^find/, function() {
+  this.populate({
+    path: "transactions",
+    seelct: "-__v"
+  });
+});
+
+// Embed transaction documents into the User document
+userSchema.pre("save", async function() {
+  const transactionPromises = this.transactions.map(
+    async id => await Transaction.findById(id)
+  );
+  this.transactions = await Promise.all(transactionPromises);
+});
+
+// userSchema.pre(/^find/, function() {
+//   const transactions = Transaction.find({});
+// });
 
 // Instance method for all user documents
 userSchema.methods.correctPassword = async function(

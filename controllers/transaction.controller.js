@@ -13,7 +13,13 @@ exports.getAllTransactions = catchAsync(async (req, res, next) => {
 });
 
 exports.createTransaction = catchAsync(async (req, res, next) => {
-  const transaction = await Transaction.create(req.body);
+  const transaction = await Transaction.create({
+    sender: req.body.sender,
+    receiver: req.body.receiver,
+    amount: req.body.amount,
+    fuelType: req.body.fuelType,
+    transactionType: req.body.transactionType
+  });
   res.status(200).json({
     status: "Success",
     message: "Transaction created",

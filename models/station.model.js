@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const Attendant = require("./attendant.model");
 
 const stationSchema = new mongoose.Schema({
   name: {
@@ -10,25 +11,29 @@ const stationSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  attendants: Array,
-  
+  attendants: [Attendant],
+
   transactions: {
     type: String
   },
+
   imageCover: {
     type: String
   },
+
   location: {
     type: {
       type: String,
       default: "Point",
       enum: ["Point"]
     },
+
     coordinates: [Number],
     address: {
       type: String,
       required: true
-    }
+    },
+    desription: String
   }
 });
 
