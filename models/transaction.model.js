@@ -37,15 +37,17 @@ const transactionSchema = new mongoose.Schema({
   }
 });
 
-transactionSchema.pre(/^find/, function(next) {
-  this.populate({
-    path: "sender",
-    select: "-transactions -__v -_id -role"
-  }).populate({
-    path: "receiver",
-    select: "-transactions -__v -_id -role"
-  });
-  next();
-});
+// transactionSchema.pre(/^find/, function(next) {
+//   this.populate({
+//     path: "sender",
+//     select: "-transactions -__v -_id -role"
+//   }).populate({
+//     path: "receiver",
+//     select: "-transactions -__v -_id -role"
+//   });
+//   next();
+// });
+
+transactionSchema.index({ sender: 1, receiver: 1 });
 
 module.exports = mongoose.model("Transaction", transactionSchema);

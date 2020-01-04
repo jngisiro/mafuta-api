@@ -11,7 +11,7 @@ const stationSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  attendants: [Attendant],
+  attendants: Array,
 
   transactions: {
     type: String
@@ -36,5 +36,11 @@ const stationSchema = new mongoose.Schema({
     desription: String
   }
 });
+
+stationSchema.index({ location: "2dsphere" });
+
+// stationSchema.pre("findOneAndUpdate", async function(next) {
+//   if (!this.isModified("attendant")) return next();
+// });
 
 module.exports = mongoose.model("Station", stationSchema);

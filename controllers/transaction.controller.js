@@ -1,71 +1,29 @@
 const catchAsync = require("../utils/catchAsync");
-const AppError = require("../utils/app-error");
 const Transaction = require("../models/transaction.model");
+const resHandler = require("./responseHandler");
 
-exports.getAllTransactions = catchAsync(async (req, res, next) => {
-  const transactions = await Transaction.find();
-  res.status(200).json({
-    status: "Success",
-    data: {
-      transactions
-    }
-  });
-});
+exports.getAllTransactions = resHandler.getAll(Transaction, "Transaction");
+
+exports.getTransaction = resHandler.getOne(Transaction, "Transaction");
+
+exports.updateTransaction = resHandler.updateOne(Transaction, "Transaction");
+
+exports.deleteTransaction = resHandler.deleteOne(Transaction, "Transaction");
 
 exports.createTransaction = catchAsync(async (req, res, next) => {
+  if (!req.user.id) req.user.id = req.params.userid;
+
   const transaction = await Transaction.create({
-    sender: req.body.sender,
+    sender: req.user.id,
     receiver: req.body.receiver,
     amount: req.body.amount,
     fuelType: req.body.fuelType,
     transactionType: req.body.transactionType
   });
-  res.status(200).json({
+
+  res.status(201).json({
     status: "Success",
     message: "Transaction created",
     transaction
-  });
-});
-
-exports.getTransaction = catchAsync(async (req, res, next) => {
-  const transaction = await Transaction.findById(req.params.id);
-  if (!transaction)
-    return next(new AppError(`No User found with ID: ${req.params.id}`, 404));
-  res.status(200).json({
-    status: "Success",
-    transaction
-  });
-});
-
-exports.updateTransaction = catchAsync(async (req, res, next) => {
-  const transaction = await Transaction.findByIdAndUpdate(
-    req.params.id,
-    req.body,
-    {
-      new: true,
-      runValidators: true
-    }
-  );
-
-  if (!transaction)
-    return next(new AppError(`No User found with ID: ${req.params.id}`, 404));
-
-  res.status(200).json({
-    status: "Success",
-    data: {
-      transaction
-    }
-  });
-});
-
-exports.deleteTransaction = catchAsync(async (req, res, next) => {
-  const transaction = await Transaction.findByIdAndDelete(req.params.id);
-
-  if (!transaction)
-    return next(new AppError(`No User found with ID: ${req.params.id}`, 404));
-
-  res.status(200).json({
-    status: "Success",
-    data: null
   });
 });

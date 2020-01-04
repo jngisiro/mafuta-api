@@ -3,6 +3,7 @@ const express = require("express");
 const app = express();
 const userRouter = require("./routes/user.routes");
 const transactionRouter = require("./routes/transaction.routes");
+const stationRouter = require("./routes/station.routes");
 const AppError = require("./utils/app-error");
 const globalErrorHandler = require("./controllers/error.controller");
 
@@ -44,6 +45,7 @@ app.use("/api/v1/users", userRouter);
 app.use("/api/v1/transactions", transactionRouter);
 
 // TODO Station routes
+app.use("/api/v1/stations", stationRouter);
 
 app.all("*", (req, res, next) => {
   next(new AppError(`Can't find route: ${req.originalUrl}`, 400));

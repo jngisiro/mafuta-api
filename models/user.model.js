@@ -79,23 +79,33 @@ userSchema.pre(/^find/, function(next) {
   next();
 });
 
-userSchema.pre(/^find/, function() {
-  this.populate({
-    path: "transactions",
-    seelct: "-__v"
-  });
-});
+// userSchema.pre(/^find/, function(next) {
+//   this.populate({
+//     path: "transactions",
+//     select: "-__v"
+//   });
+//   next();
+// });
 
 // Embed transaction documents into the User document
-userSchema.pre("save", async function() {
-  const transactionPromises = this.transactions.map(
-    async id => await Transaction.findById(id)
-  );
-  this.transactions = await Promise.all(transactionPromises);
-});
+// userSchema.pre("save", async function() {
+//   const transactionPromises = this.transactions.map(
+//     async id => await Transaction.findById(id)
+//   );
+//   this.transactions = await Promise.all(transactionPromises);
+// });
 
-// userSchema.pre(/^find/, function() {
-//   const transactions = Transaction.find({});
+// userSchema.pre(/^find/, async function(next) {
+//   const transactions = await Transaction.find();
+//   console.log(transactions);
+//   this.transactions = transactions;
+//   next();
+// });
+
+// userSchema.virtual("transactions", {
+//   ref: "Transaction",
+//   foreignField: "sender/_id",
+//   localField: "_id"
 // });
 
 // Instance method for all user documents

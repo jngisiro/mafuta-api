@@ -4,7 +4,7 @@ const dotenv = require("dotenv");
 // Saftety net handle unexpected programming errors
 process.on("uncaughtException", err => {
   console.log("UNCAUGHT EXCEPTION! Shutting Down...");
-  console.log(err.name, err.message);
+  console.log(err.name, err.stack);
   process.exit(1);
 });
 

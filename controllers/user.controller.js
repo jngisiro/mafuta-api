@@ -1,6 +1,7 @@
 const catchAsync = require("../utils/catchAsync"); // Error Handling wrapper for aysnc operations
 const AppError = require("../utils/app-error"); // Custom Error Handling Class
 const User = require("../models/user.model");
+const resHandler = require("../controllers/responseHandler");
 
 const filterRequestBody = (inputData, ...allowedFields) => {
   const fields = {};
@@ -10,59 +11,23 @@ const filterRequestBody = (inputData, ...allowedFields) => {
   return fields;
 };
 
-exports.getAllUsers = catchAsync(async (req, res, next) => {
-  const users = await User.find();
-  res.status(200).json({
-    status: "Success",
-    data: {
-      users
-    }
-  });
-});
+exports.getAllUsers = resHandler.getAll(User);
+
+exports.getUser = resHandler.getOne(User, "User");
+
+exports.me = (req, res, next) => {
+  req.params.id = req.user.id;
+  next();
+};
+
+exports.updateUser = resHandler.updateOne(User, "User");
+
+exports.deleteUser = resHandler.deleteOne(User, "User");
 
 exports.createUser = catchAsync(async (req, res, next) => {
-  const user = await User.create({
-    firstname: req.body.firstname,
-    lastname: req.body.lastname,
-    email: req.body.email,
-    password: req.body.password,
-    confirmPassword: req.body.confirmPassword
-  });
-  res.status(200).json({
-    status: "Success",
-    message: "User created",
-    user
-  });
-});
-
-exports.getUser = catchAsync(async (req, res, next) => {
-  const user = await User.findById(req.params.id);
-
-  if (!user)
-    return next(new AppError(`No User found with ID: ${req.params.id}`, 404));
-
-  res.status(200).json({
-    status: "Success",
-    user
-  });
-});
-
-exports.updateUser = catchAsync(async (req, res, next) => {
-  res.status(200).json({
-    status: "Success",
-    data: {
-      user: "user"
-    }
-  });
-});
-
-exports.deleteUser = catchAsync(async (req, res, next) => {
-  res.status(200).json({
-    status: "Success",
-    data: {
-      user: "user"
-    }
-  });
+  next(
+    new AppError("This route is not defined! Please use the users/signup route")
+  );
 });
 
 exports.updateMe = catchAsync(async (req, res, next) => {
