@@ -13,7 +13,7 @@ if (process.env.NODE_ENV === "test")
 else dotenv.config({ path: "./config.env" });
 //const DB = process.env.DATABASE.replace("<PASSWORD>", process.env.PASSWORD);
 
-const DB = process.env.DATABASE_LOCAL;
+const DB = process.env.DATABASE;
 
 mongoose
   .connect(DB, {
