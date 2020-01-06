@@ -3,7 +3,7 @@ const dotenv = require("dotenv");
 
 // Saftety net handle unexpected programming errors
 process.on("uncaughtException", err => {
-  console.log("UNCAUGHT EXCEPTION! Shutting Down...");
+  console.log("UNCAUGHT EXCEPTION!");
   console.log(err.name, err.stack);
   // process.exit(1);
 });
@@ -35,7 +35,7 @@ const server = app.listen(PORT, () => {
 });
 
 process.on("unhandledRejection", err => {
-  console.log("UNHANDLED REJECTION! Shutting Down...");
+  console.log("UNHANDLED REJECTION!");
   console.log(err.name, err.message);
   // server.close(() => {
   //   process.exit(1);
