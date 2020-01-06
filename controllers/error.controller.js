@@ -15,7 +15,7 @@ const sendProdError = (err, res) => {
   if (err.isOperational) {
     res.status(err.statusCode).json({
       status: err.status,
-      message: err.message
+      error: err.message
     });
   } else {
     // Log Error
@@ -61,7 +61,10 @@ module.exports = (err, req, res, next) => {
   // Send different errors to clients depending on the program is development or production mode
   if (process.env.NODE_ENV === "development") {
     sendDevError(err, res);
-  } else if (process.env.NODE_ENV === "production") {
+  } else if (
+    process.env.NODE_ENV === "production" ||
+    process.env.NODE_ENV === "test"
+  ) {
     let error = err; // { ...err }
 
     if (error.name === "CastError") error = handleCastErrorDB(error);

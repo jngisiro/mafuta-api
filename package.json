@@ -5,8 +5,11 @@
   "main": "server.js",
   "scripts": {
     "start": "nodemon server",
-    "start:prod": "NODE_ENV=production nodemon server",
-    "test": "mocha tests/*.js --exit"
+    "start:prod": "cross-env NODE_ENV=production nodemon server",
+    "test": "cross-env NODE_ENV=test mocha --timeout 10000 tests/**/*.test.js --exit",
+    "report": "cross-env NODE_ENV=test nyc --reporter=lcov mocha --timeout 10000 tests/**/*.test.js",
+    "text-report": "cross-env NODE_ENV=test nyc --reporter=text-summary mocha --timeout 10000 tests/**/*.test.js",
+    "nyc": "cross-env NODE_ENV=test nyc mocha --timeout 10000 tests/**/*.test.js"
   },
   "author": "Paul Ngisiro",
   "license": "ISC",
@@ -39,5 +42,13 @@
     "rewire": "^4.0.1",
     "sinon": "^8.0.2",
     "sinon-chai": "^3.4.0"
+  },
+  "nyc": {
+    "exclude": [
+      "tests",
+      "node_modules"
+    ],
+    "cache": false,
+    "report-dir": "./tests/report"
   }
 }

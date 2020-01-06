@@ -1,2 +1,5 @@
-*.env
+config.env
+testing.config.env
 node_modules/
+.nyc_output
+tests/report
